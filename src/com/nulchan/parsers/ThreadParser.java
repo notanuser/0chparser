@@ -45,7 +45,7 @@ public final class ThreadParser extends Parser<ThreadContainer> {
 			}
 			currentElements = element.getElementsByClass("postnode");
 			for(Element elem : currentElements) { 
-				//TODO something is terribly wrong with this. I don't even know.
+				//TODO Тут что-то не так. Или все оке?
 				posts++;
 				if(!elem.getElementsByTag("img").isEmpty())
 					images++;

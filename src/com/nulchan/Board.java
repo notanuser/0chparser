@@ -39,7 +39,6 @@ public class Board {
 	private String url;
 	private String board;
 	int page;
-	//Map<String, String> cookies;
 	
 	/**
 	 * Инициализация выбранной доски.

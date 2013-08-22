@@ -17,7 +17,7 @@ abstract class Fetcher<T extends PostContainer> implements IFetcher<T> {
 	
 	/**
 	 * Ну ты понял. Создаем загрузчик, устанавливаем страницу загрузки.
-	 * @param path
+	 * @param path Путь полный до цели, блин.
 	 */
 	public Fetcher(final String path){
 			uri = path;
@@ -45,7 +45,7 @@ abstract class Fetcher<T extends PostContainer> implements IFetcher<T> {
 	}
 	/**
 	 * Парсит заданный документ в массив.
-	 * @param Что парсим
+	 * @param html Что парсим
 	 * @return массив сообщений
 	 * @throws BoardException 
 	 */

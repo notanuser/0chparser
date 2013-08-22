@@ -23,12 +23,6 @@ final class ThreadFetcher extends Fetcher<ThreadContainer> {
 	public ThreadFetcher(String path){
 		super(path);
 	}
-
-	/*@Override
-	protected Document fetchURL(String uri) throws IOException {
-		return Jsoup.connect(uri).userAgent(userAgent).get();
-	}*/
-
 	@Override
 	protected ThreadContainer[] parseHtmlDocument(Document html) throws ParseException {
 		List<ThreadContainer> posts = new ArrayList<ThreadContainer>();
@@ -38,13 +32,5 @@ final class ThreadFetcher extends Fetcher<ThreadContainer> {
 			posts.add(parser.parse(e));
 		}
 		return posts.toArray(new ThreadContainer[posts.size()]);
-	}
-	
-	ThreadContainer parseElement(final Element e) {
-		//imageurl, text, thumburl, title, trip;
-		//int posts, withImages;
-		
-		return null;
-		
 	}
 }

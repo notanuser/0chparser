@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 
 import com.nulchan.exceptions.BoardException;
@@ -24,7 +25,15 @@ public class Board {
 		public static String password = "";
 		protected final static String baseUrl = "http://0chan.hk/";
 		protected final static String userAgent = "Mozilla";
-		protected static Map<String, String> cookies; 
+		protected static Map<String, String> cookies;
+		/**
+		 * Проверяет, установлены ли куки.
+		 * @return <code>true</code> - если куки установлены, <code>false</code> если куки не установлены.
+		 */
+		protected static boolean isSetCookies() {
+			return cookies != null && !cookies.isEmpty();
+		}
+		
 	}
 
 	private String url;
@@ -42,11 +51,14 @@ public class Board {
 		this.url = Settings.baseUrl + board;
 		page = 0;
 		try {
-			Settings.cookies = Jsoup.connect(url)
+			Response response = Jsoup.connect(url)
 					.userAgent(Settings.userAgent)
 					.referrer(Settings.baseUrl)
-					.execute()
-					.cookies();
+					.execute();
+			if (response.statusCode() == 404)
+				throw new BoardException(response.statusMessage());
+			if(!Settings.isSetCookies())
+				Settings.cookies = response.cookies();
 		} catch(IOException e) {
 			throw new BoardException("Невозможно подключиться.");
 		}
@@ -84,7 +96,7 @@ public class Board {
 	 * @param post отправляемое сообщение
 	 * @return отправщик сообщений, служащий для отправки сообщения в тред.
 	 */
-	public PostSender getSender(ThreadContainer thread, PostContainer post) {
+	public IPostSender getSender(ThreadContainer thread, PostContainer post) {
 		return new PostSender(board, thread, post);
 	}
 	
@@ -93,7 +105,7 @@ public class Board {
 	 * @param OP отправляемое сообщение.
 	 * @return отправщик сообщений, создающий новый тред.
 	 */
-	public PostSender getThreadMaker(PostContainer OP) {
+	public IPostSender getThreadMaker(PostContainer OP) {
 		return new PostSender(board, OP);
 	}
 	

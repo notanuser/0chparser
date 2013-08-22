@@ -27,14 +27,6 @@ final class PostFetcher extends Fetcher<PostContainer> {
 		super(boardUrl + "/res/" + thread.getId() + ".html");
 	}
 
-	/*@Override
-	protected Document fetchURL() throws IOException {
-		Document doc = null;
-		uri += ".html";
-		doc = Jsoup.connect(uri).userAgent(userAgent).get();
-		return doc;
-	}*/
-
 	@Override
 	protected PostContainer[] parseHtmlDocument(Document html) throws ParseException {
 		List<PostContainer> posts = new ArrayList<PostContainer>();

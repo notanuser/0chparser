@@ -30,20 +30,17 @@ abstract class Fetcher<T extends PostContainer> implements IFetcher<T> {
 	 */
 	private org.jsoup.nodes.Document fetchURL() throws BoardException {
 		try {
-                    Response response = Jsoup
-                            .connect(uri)
-                            .userAgent(Board.Settings.userAgent)
-                            .maxBodySize(3145728)
-                            .execute();
-                    return Jsoup.parse(response.body(), uri);
-		/*return Jsoup
-				.connect(uri)
-				.userAgent(Board.Settings.userAgent)
-                                .timeout(10000)
-				.get();*/
+			Response response = Jsoup
+					.connect(uri)
+					.userAgent(Board.Settings.userAgent)
+					.maxBodySize(3145728)
+					.execute();
+			if(response.statusCode() == 404)
+				throw new BoardException(response.statusMessage());
+			return Jsoup.parse(response.body(), uri);
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BoardException("Видимо, доска неверная.");
+			//e.printStackTrace();
+			throw new BoardException(e.getMessage());
 		}
 	}
 	/**

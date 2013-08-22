@@ -25,7 +25,7 @@ import com.nulchan.exceptions.BoardException;
 import com.nulchan.objects.PostContainer;
 import com.nulchan.objects.ThreadContainer;
 
-public class PostSender {
+public class PostSender implements IPostSender {
 	static Charset charset = Charset.forName("UTF-8");
 	final String threadId;
 	final String board;
@@ -39,7 +39,7 @@ public class PostSender {
 	 * @param thread тред для отправки.
 	 * @param post отправляемое сообщение.
 	 */
-	public PostSender(String board, ThreadContainer thread, PostContainer post) {
+	protected PostSender(String board, ThreadContainer thread, PostContainer post) {
 		this.board = board;
 		this.threadId = thread == null ? "0" : thread.getId();
 		this.post = post;
@@ -53,15 +53,14 @@ public class PostSender {
 	 * @param board доска на которой создается тред.
 	 * @param post оригинальное сообщение.
 	 */
-	public PostSender(String board, PostContainer post) {
+	protected PostSender(String board, PostContainer post) {
 		this(board, null, post);	
 	}
 	
-	/**
-	 * Получает изображение капчи в виде массива байт.
-	 * @return массив байт с изображением капчи.
-	 * @throws BoardException вызывается, если капчу не загрузить.
+	/*
+	 * @see com.nulchan.IPostSender#getCaptcha()
 	 */
+	@Override
 	public byte[] getCaptcha() throws BoardException {
 		try {
 			Connection.Response response = Jsoup
@@ -78,11 +77,10 @@ public class PostSender {
 		}
 	}
 	
-	/**
-	 * Отправляет сообщение.
-	 * @param captcha подтверждение.
-	 * @throws BoardException вызывается при ошибке подключения или отправки сообщения.
+	/* (non-Javadoc)
+	 * @see com.nulchan.IPostSender#send(java.lang.String)
 	 */
+	@Override
 	public void send(String captcha) throws BoardException {
 		
         MultipartEntity entity = prepareEntity(captcha);

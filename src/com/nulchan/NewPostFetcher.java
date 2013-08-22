@@ -25,12 +25,8 @@ final class NewPostFetcher extends Fetcher<PostContainer> {
 	public NewPostFetcher(String board, ThreadContainer thread, PostContainer lastPost) {
 		super(String.format(Board.Settings.baseUrl + "/expand.php?after=%s&board=%s&threadid=%s", lastPost.getId(), board, thread.getId()));
 	}
-
-	/*@Override
-	protected Document fetchURL() throws IOException {
-		return org.jsoup.Jsoup.connect(uri).userAgent(userAgent).get();
-	}*/
-
+	
+	
 	@Override
 	protected PostContainer[] parseHtmlDocument(Document html) throws ParseException {
 		LinkedList<PostContainer> posts = new LinkedList<>();

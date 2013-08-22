@@ -20,12 +20,11 @@ public final class ThreadParser extends Parser<ThreadContainer> {
 			Element currentElement = element.getElementsByClass("postername").get(0);
 			String name = currentElement.text();
 			boolean isSaged = currentElement.html().contains("mailto:sage");
-			Elements currentElements = currentElement.getElementsByTag("label");
+			Elements currentElements = element.getElementsByClass("filetitle");
 			String title = currentElements.isEmpty() ? "" : currentElements.get(0).text();
 			currentElements = element.getElementsByClass("postertrip");
 			String trip = currentElements.isEmpty() ? "" : currentElements.get(0).text();
-			String date = element.getAllElements().get(2).getElementsByTag("label").get(0).text();
-			date = date.substring(name.length()+1);
+			String date = element.getAllElements().get(2).getElementsByTag("label").get(0).ownText();
 			String id = element.getElementsByClass("reflink").get(0).getElementsByTag("a").get(1).text();
 			currentElement = element.getElementsByClass("postnode").get(0);
 			String text = currentElement.getElementsByTag("blockquote").get(0).text() + getVideo(element);
@@ -45,7 +44,7 @@ public final class ThreadParser extends Parser<ThreadContainer> {
 			}
 			currentElements = element.getElementsByClass("postnode");
 			for(Element elem : currentElements) { 
-				//TODO Тут что-то не так. Или все оке?
+				//TODO something is terribly wrong with this. I don't even know.
 				posts++;
 				if(!elem.getElementsByTag("img").isEmpty())
 					images++;
@@ -53,7 +52,7 @@ public final class ThreadParser extends Parser<ThreadContainer> {
 			
 			return new ThreadContainer(id, image, thumb, name, isSaged, date, title, trip, text, posts, images);
 		} catch(Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			throw new ParseException(this.getClass().getName());
 		}
 	}

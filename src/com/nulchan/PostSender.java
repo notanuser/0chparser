@@ -43,7 +43,7 @@ public class PostSender implements IPostSender {
 		this.board = board;
 		this.threadId = thread == null ? "0" : thread.getId();
 		this.post = post;
-		this.cookies = Board.Settings.cookies;
+		this.cookies = Board.Settings.isSetCookies() ? Board.Settings.cookies : null;
 		client = new DefaultHttpClient();
     	client.setRedirectStrategy(new LaxRedirectStrategy());
 	}
@@ -63,7 +63,13 @@ public class PostSender implements IPostSender {
 	@Override
 	public byte[] getCaptcha() throws BoardException {
 		try {
-			Connection.Response response = Jsoup
+			Connection.Response response = cookies == null ? Jsoup
+					.connect(Settings.baseUrl + "captcha.php?" + Math.random())
+					.userAgent(Settings.userAgent)
+					.referrer(Settings.baseUrl)
+					.ignoreContentType(true)
+					.execute() 
+					: Jsoup
 					.connect(Settings.baseUrl + "captcha.php?" + Math.random())
 					.userAgent(Settings.userAgent)
 					.cookies(cookies)
@@ -102,13 +108,15 @@ public class PostSender implements IPostSender {
 	private HttpPost preparePostRequest(MultipartEntity entity) {
 		//Генерируем запрос.
 		HttpPost request = new HttpPost(Settings.baseUrl + "board.php?dir=" + board);
-		StringBuilder cookieStringBuilder = new StringBuilder();
-		for(String key : cookies.keySet())
-			cookieStringBuilder.append(key + "=" + cookies.get(key) + ";");
-        request.getParams().setParameter(ClientPNames.COOKIE_POLICY, CookiePolicy.BROWSER_COMPATIBILITY);
+		if(cookies!= null && !cookies.isEmpty()) {
+			StringBuilder cookieStringBuilder = new StringBuilder();
+			for(String key : cookies.keySet())
+				cookieStringBuilder.append(key + "=" + cookies.get(key) + ";");
+	        request.getParams().setParameter(ClientPNames.COOKIE_POLICY, CookiePolicy.BROWSER_COMPATIBILITY);
+			request.setHeader("Cookie", cookieStringBuilder.toString());
+		}
 		request.setHeader("Referer", Settings.baseUrl + board);
         request.setHeader("User-Agent", Settings.userAgent);
-        request.setHeader("Cookie", cookieStringBuilder.toString());
         request.setEntity(entity);
 		return request;
 	}

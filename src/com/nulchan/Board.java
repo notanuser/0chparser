@@ -56,7 +56,7 @@ public class Board {
 					.execute();
 			if (response.statusCode() == 404)
 				throw new BoardException(response.statusMessage());
-			if(!Settings.isSetCookies())
+			else if(!Settings.isSetCookies())
 				Settings.cookies = response.cookies();
 		} catch(IOException e) {
 			throw new BoardException("Невозможно подключиться.");

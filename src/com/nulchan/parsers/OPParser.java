@@ -30,7 +30,7 @@ public final class OPParser extends Parser<PostContainer> {
 			String trip = currentElements.isEmpty() ? "" : currentElements.get(0).text();
 			//get date and id
 			currentElements = element.getElementsByTag("label");
-			String date = currentElements.get(0).text().substring(name.length()+1);
+			String date = currentElements.get(0).ownText();
 			String text = element.getElementsByTag("blockquote").get(0).text() + getVideo(element);
 			return new PostContainer(id, image, thumb, name, isSaged, date, title, trip, text);
 			//return null;

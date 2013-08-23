@@ -28,13 +28,14 @@ final class PostFetcher extends Fetcher<PostContainer> {
 	}
 
 	@Override
-	protected PostContainer[] parseHtmlDocument(Document html) throws ParseException {
+	protected PostContainer[] parseHtmlDocument(Document html)
+			throws ParseException {
 		List<PostContainer> posts = new ArrayList<PostContainer>();
 		final Elements containers = html.getElementsByClass("postnode");
 		IParser<PostContainer> parser = new OPParser();
 		posts.add(parser.parse(containers.first()));
 		parser = new PostParser();
-		for(int i = 1; i<containers.size(); ++i) {
+		for (int i = 1; i < containers.size(); ++i) {
 			posts.add(parser.parse(containers.get(i)));
 		}
 		return posts.toArray(new PostContainer[posts.size()]);

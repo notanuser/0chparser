@@ -23,17 +23,21 @@ final class NewPostFetcher extends Fetcher<PostContainer> {
 	 * @param lastPost сообщение, с которого начинать загрузку.
 	 */
 	public NewPostFetcher(String board, ThreadContainer thread, PostContainer lastPost) {
-		super(String.format(Board.Settings.baseUrl + "/expand.php?after=%s&board=%s&threadid=%s", lastPost.getId(), board, thread.getId()));
+		super(String.format(Board.Settings.baseUrl 
+				+ "/expand.php?after=%s&board=%s&threadid=%s"
+				, lastPost.getId(), board, thread.getId()));
 	}
 	
 	
 	@Override
-	protected PostContainer[] parseHtmlDocument(Document html) throws ParseException {
+	protected PostContainer[] parseHtmlDocument(Document html)
+			throws ParseException {
 		LinkedList<PostContainer> posts = new LinkedList<>();
-        IParser<PostContainer> parser = new NewPostParser();
-        for(Element e : html.getElementsByClass("reply"))
+		IParser<PostContainer> parser = new NewPostParser();
+		for (Element e : html.getElementsByClass("reply"))
 			posts.add(parser.parse(e));
-		return posts.size() > 0 ? posts.toArray(new PostContainer[posts.size()]) : null; 
+		return posts.size() > 0 ? 
+				posts.toArray(new PostContainer[posts.size()]) : null;
 	}
 	
 }

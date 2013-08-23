@@ -13,19 +13,19 @@ import com.nulchan.objects.ThreadContainer;
 
 public class Board {
 	public abstract static class Settings {
+		protected final static String baseUrl = "http://0chan.hk/";
 		/**
 		 * Список досок.
 		 */
 		public final static String[] boards =
 			{"a", "b", "d", "r", "0", "e", "t", "hw", "s", "c", "vg", "8", "bg","wh", "au", "bo"
 			, "co", "cook", "f", "fa", "fl", "m", "med", "ph", "tv", "wp", "war", "h", "g", "fur" };
+		protected static Map<String, String> cookies;
 		/**
 		 * Пароль на удаление.
 		 */
 		public static String password = "";
-		protected final static String baseUrl = "http://0chan.hk/";
 		protected final static String userAgent = "Mozilla";
-		protected static Map<String, String> cookies;
 		/**
 		 * Проверяет, установлены ли куки.
 		 * @return <code>true</code> - если куки установлены, <code>false</code> если куки не установлены.
@@ -36,9 +36,9 @@ public class Board {
 		
 	}
 
-	private String url;
-	private String board;
+	String board;
 	int page;
+	String url;
 	
 	/**
 	 * Инициализация выбранной доски.
@@ -56,7 +56,7 @@ public class Board {
 					.execute();
 			if (response.statusCode() == 404)
 				throw new BoardException(response.statusMessage());
-			if(!Settings.isSetCookies())
+			else if(!Settings.isSetCookies())
 				Settings.cookies = response.cookies();
 		} catch(IOException e) {
 			throw new BoardException("Невозможно подключиться.");

@@ -1,4 +1,4 @@
-package com.nulchan;
+private package com.nulchan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +24,11 @@ final class ThreadFetcher extends Fetcher<ThreadContainer> {
 		super(path);
 	}
 	@Override
-	protected ThreadContainer[] parseHtmlDocument(Document html) throws ParseException {
+	protected ThreadContainer[] parseHtmlDocument(Document html) 
+			throws ParseException {
 		List<ThreadContainer> posts = new ArrayList<ThreadContainer>();
-		Elements elements = html.getElementsByAttributeValueStarting("id", "thread");
+		Elements elements = html
+				.getElementsByAttributeValueStarting("id", "thread");
 		IParser<ThreadContainer> parser = new ThreadParser();
 		for(Element e : elements) {
 			posts.add(parser.parse(e));

@@ -32,7 +32,7 @@ final class NewPostFetcher extends Fetcher<PostContainer> {
 	@Override
 	protected PostContainer[] parseHtmlDocument(Document html)
 			throws ParseException {
-		LinkedList<PostContainer> posts = new LinkedList<>();
+		LinkedList<PostContainer> posts = new LinkedList<PostContainer>();
 		IParser<PostContainer> parser = new NewPostParser();
 		for (Element e : html.getElementsByClass("reply"))
 			posts.add(parser.parse(e));

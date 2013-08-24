@@ -5,16 +5,16 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.nulchan.exceptions.ParseException;
-import com.nulchan.objects.PostContainer;
+import com.nulchan.objects.PostEntity;
 
 
 /**
  * Парсер первого сообщения в треде.
  */
-public final class OPParser extends Parser<PostContainer> {
+public final class OPParser extends Parser<PostEntity> {
 
 	@Override
-	public PostContainer parse(final Element element) throws ParseException {
+	public PostEntity parse(final Element element) throws ParseException {
 		try {
 			Elements currentElements;
 			Element currentElement;
@@ -39,7 +39,7 @@ public final class OPParser extends Parser<PostContainer> {
 			String date = currentElements.get(0).ownText();
 			String text = element.getElementsByTag("blockquote")
 					.get(0).text() + getVideo(element);
-			return new PostContainer(id, image, thumb, name, isSaged, date
+			return new PostEntity(id, image, thumb, name, isSaged, date
 					, title, trip, text);
 		} catch (Exception ex) {
 			throw new ParseException(this.getClass().getName());

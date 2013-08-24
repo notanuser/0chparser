@@ -8,8 +8,8 @@ import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 
 import com.nulchan.exceptions.BoardException;
-import com.nulchan.objects.PostContainer;
-import com.nulchan.objects.ThreadContainer;
+import com.nulchan.objects.PostEntity;
+import com.nulchan.objects.ThreadEntity;
 
 public class Board {
 	public abstract static class Settings {
@@ -36,9 +36,8 @@ public class Board {
 		
 	}
 
-	String board;
+	String board, url, name;
 	int page;
-	String url;
 	
 	/**
 	 * Инициализация выбранной доски.
@@ -58,6 +57,7 @@ public class Board {
 				throw new BoardException(response.statusMessage());
 			else if(!Settings.isSetCookies())
 				Settings.cookies = response.cookies();
+			name = Jsoup.parse(response.body()).getElementsByTag("title").get(0).ownText();
 		} catch(IOException e) {
 			throw new BoardException("Невозможно подключиться.");
 		}
@@ -67,7 +67,7 @@ public class Board {
 	 * Создает загрузчик тредов.
 	 * @return {@link IFetcher}, загружающий треды с доски.
 	 */
-	public IFetcher<ThreadContainer> getFetcher() {
+	public IFetcher<ThreadEntity> getFetcher() {
 		return new ThreadFetcher(page > 0 ? url+"/" + page + ".html" : url);
 	}
 	
@@ -76,7 +76,7 @@ public class Board {
 	 * @param thread заданный тред.
 	 * @return {@link IFetcher}, заггружающий сообщения треда.
 	 */
-	public IFetcher<PostContainer> getFetcher(ThreadContainer thread) {
+	public IFetcher<PostEntity> getFetcher(ThreadEntity thread) {
 		return new PostFetcher(url, thread);
 	}
 	
@@ -86,7 +86,7 @@ public class Board {
 	 * @param post сообщение, с которого начинать загрузку.
 	 * @return {@link IFetcher}, загружающий сообщения, идущие после заданного.
 	 */
-	public IFetcher<PostContainer> getFetcher(ThreadContainer thread, PostContainer post) {
+	public IFetcher<PostEntity> getFetcher(ThreadEntity thread, PostEntity post) {
 		return new NewPostFetcher(board, thread, post);
 	}
 	/**
@@ -95,7 +95,7 @@ public class Board {
 	 * @param post отправляемое сообщение
 	 * @return отправщик сообщений, служащий для отправки сообщения в тред.
 	 */
-	public IPostSender getSender(ThreadContainer thread, PostContainer post) {
+	public IPostSender getSender(ThreadEntity thread, PostEntity post) {
 		return new PostSender(board, thread, post);
 	}
 	
@@ -104,8 +104,12 @@ public class Board {
 	 * @param OP отправляемое сообщение.
 	 * @return отправщик сообщений, создающий новый тред.
 	 */
-	public IPostSender getThreadMaker(PostContainer OP) {
+	public IPostSender getThreadMaker(PostEntity OP) {
 		return new PostSender(board, OP);
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	/**

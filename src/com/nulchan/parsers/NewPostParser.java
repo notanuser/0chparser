@@ -6,15 +6,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.nulchan.exceptions.ParseException;
-import com.nulchan.objects.PostContainer;
+import com.nulchan.objects.PostEntity;
 
 /**
  * Парсер для новых сообщений в треде.
  */
-public final class NewPostParser extends Parser<PostContainer> {
+public final class NewPostParser extends Parser<PostEntity> {
 
     @Override
-    public PostContainer parse(final Element element) throws ParseException {
+    public PostEntity parse(final Element element) throws ParseException {
     	try {
     		 Elements currentElements;
     		 Element currentElement;
@@ -38,7 +38,7 @@ public final class NewPostParser extends Parser<PostContainer> {
 	        String date = currentElements.get(0).ownText();
 	        String text = element.getElementsByClass("postmessage")
 	        		.get(0).text() + getVideo(element);
-	        return new PostContainer(id, image, thumb, name, isSaged, date
+	        return new PostEntity(id, image, thumb, name, isSaged, date
 	        		, title, trip, text);
     	} catch(Exception e) {
     		throw new ParseException(this.getClass().getName());

@@ -4,10 +4,10 @@ package com.nulchan.parsers;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.nulchan.objects.PostContainer;
+import com.nulchan.objects.PostEntity;
 
 
-abstract class Parser<T extends PostContainer> implements IParser<T>{
+abstract class Parser<T extends PostEntity> implements IParser<T>{
 
 	protected final String getVideo(final Element element) {
 		try {

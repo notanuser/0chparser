@@ -7,15 +7,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.nulchan.exceptions.ParseException;
-import com.nulchan.objects.ThreadContainer;
+import com.nulchan.objects.ThreadEntity;
 
 
 /**
  * Парсер для треда с доски.
  */
-public final class ThreadParser extends Parser<ThreadContainer> {
+public final class ThreadParser extends Parser<ThreadEntity> {
 	@Override
-	public ThreadContainer parse(final Element element) throws ParseException {
+	public ThreadEntity parse(final Element element) throws ParseException {
 		try {
 			Element currentElement = element.getElementsByClass("postername").get(0);
 			Elements currentElements;
@@ -59,7 +59,7 @@ public final class ThreadParser extends Parser<ThreadContainer> {
 					images++;
 			}
 			
-			return new ThreadContainer(id, image, thumb, name, isSaged, date
+			return new ThreadEntity(id, image, thumb, name, isSaged, date
 					, title, trip, text, posts, images);
 		} catch(Exception ex) {
 			throw new ParseException(this.getClass().getName());

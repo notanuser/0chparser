@@ -4,14 +4,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.nulchan.exceptions.ParseException;
-import com.nulchan.objects.PostContainer;
+import com.nulchan.objects.PostEntity;
 
 /**
  * Парсер сообщений треда.
  */
-public final class PostParser extends Parser<PostContainer>{
+public final class PostParser extends Parser<PostEntity>{
 	@Override
-	public PostContainer parse(final Element element) throws ParseException {
+	public PostEntity parse(final Element element) throws ParseException {
 		try{
 			final Element content = element.getElementsByClass("reply").get(0);
 			Element currentElement;
@@ -37,7 +37,7 @@ public final class PostParser extends Parser<PostContainer>{
 			currentElements = currentElement.getElementsByTag("img");
 			String thumb = currentElements.isEmpty() 
 					? "" : currentElements.get(0).attr("src");
-		return new PostContainer(id, image, thumb, name, isSaged, date
+		return new PostEntity(id, image, thumb, name, isSaged, date
 				, title, trip, text);
 		} catch (Exception ex) {
 			throw new ParseException(this.getClass().getName());

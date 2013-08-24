@@ -9,12 +9,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.nulchan.exceptions.ParseException;
-import com.nulchan.objects.ThreadContainer;
+import com.nulchan.objects.ThreadEntity;
 import com.nulchan.parsers.IParser;
 import com.nulchan.parsers.ThreadParser;
 
 
-final class ThreadFetcher extends Fetcher<ThreadContainer> {
+final class ThreadFetcher extends Fetcher<ThreadEntity> {
 
 	/**
 	 * 
@@ -24,15 +24,15 @@ final class ThreadFetcher extends Fetcher<ThreadContainer> {
 		super(path);
 	}
 	@Override
-	protected ThreadContainer[] parseHtmlDocument(Document html) 
+	protected ThreadEntity[] parseHtmlDocument(Document html) 
 			throws ParseException {
-		List<ThreadContainer> posts = new ArrayList<ThreadContainer>();
+		List<ThreadEntity> posts = new ArrayList<ThreadEntity>();
 		Elements elements = html
 				.getElementsByAttributeValueStarting("id", "thread");
-		IParser<ThreadContainer> parser = new ThreadParser();
+		IParser<ThreadEntity> parser = new ThreadParser();
 		for(Element e : elements) {
 			posts.add(parser.parse(e));
 		}
-		return posts.toArray(new ThreadContainer[posts.size()]);
+		return posts.toArray(new ThreadEntity[posts.size()]);
 	}
 }

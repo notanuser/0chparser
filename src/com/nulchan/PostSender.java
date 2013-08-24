@@ -22,14 +22,14 @@ import org.jsoup.nodes.Document;
 
 import com.nulchan.Board.Settings;
 import com.nulchan.exceptions.BoardException;
-import com.nulchan.objects.PostContainer;
-import com.nulchan.objects.ThreadContainer;
+import com.nulchan.objects.PostEntity;
+import com.nulchan.objects.ThreadEntity;
 
 public class PostSender implements IPostSender {
 	static Charset charset = Charset.forName("UTF-8");
 	final String threadId;
 	final String board;
-	final PostContainer post;
+	final PostEntity post;
 	Map<String,String> cookies;
 	final DefaultHttpClient client;
 	
@@ -39,7 +39,7 @@ public class PostSender implements IPostSender {
 	 * @param thread тред для отправки.
 	 * @param post отправляемое сообщение.
 	 */
-	protected PostSender(String board, ThreadContainer thread, PostContainer post) {
+	protected PostSender(String board, ThreadEntity thread, PostEntity post) {
 		this.board = board;
 		this.threadId = thread == null ? "0" : thread.getId();
 		this.post = post;
@@ -54,7 +54,7 @@ public class PostSender implements IPostSender {
 	 * @param board доска на которой создается тред.
 	 * @param post оригинальное сообщение.
 	 */
-	protected PostSender(String board, PostContainer post) {
+	protected PostSender(String board, PostEntity post) {
 		this(board, null, post);	
 	}
 	

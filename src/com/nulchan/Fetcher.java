@@ -8,11 +8,11 @@ import org.jsoup.Jsoup;
 
 import com.nulchan.exceptions.BoardException;
 import com.nulchan.exceptions.ParseException;
-import com.nulchan.objects.PostContainer;
+import com.nulchan.objects.PostEntity;
 
 
 
-abstract class Fetcher<T extends PostContainer> implements IFetcher<T> {
+public abstract class Fetcher<T extends PostEntity> implements IFetcher<T> {
 	String uri; //страничка.
 	
 	/**
@@ -28,7 +28,7 @@ abstract class Fetcher<T extends PostContainer> implements IFetcher<T> {
 	 * @throws IOException если что-то не так.
 	 * @throws BoardException 
 	 */
-	private org.jsoup.nodes.Document fetchURL() throws BoardException {
+	protected org.jsoup.nodes.Document fetchURL() throws BoardException {
 		try {
 			Response response = Jsoup
 					.connect(uri)

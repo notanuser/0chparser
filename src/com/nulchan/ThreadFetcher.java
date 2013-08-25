@@ -1,4 +1,4 @@
-private package com.nulchan;
+package com.nulchan;
 
 import java.util.ArrayList;
 import java.util.List;

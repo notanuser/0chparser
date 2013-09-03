@@ -4,7 +4,6 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Map;
 
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.ClientPNames;
@@ -30,14 +29,30 @@ public class PostSender implements IPostSender {
 	final String threadId;
 	final String board;
 	final PostEntity post;
-	Map<String,String> cookies;
+	Map<String, String> cookies;
 	final DefaultHttpClient client;
-	
+
+	/**
+	 * Создает отправщик и устанавливает его на создание треда.
+	 * 
+	 * @param board
+	 *            доска на которой создается тред.
+	 * @param post
+	 *            оригинальное сообщение.
+	 */
+	protected PostSender(String board, PostEntity post) {
+		this(board, null, post);
+	}
+
 	/**
 	 * Создает отправщик и устанавливает его на отправку сообщения в тред.
-	 * @param board доска для отправки.
-	 * @param thread тред для отправки.
-	 * @param post отправляемое сообщение.
+	 * 
+	 * @param board
+	 *            доска для отправки.
+	 * @param thread
+	 *            тред для отправки.
+	 * @param post
+	 *            отправляемое сообщение.
 	 */
 	protected PostSender(String board, ThreadEntity thread, PostEntity post) {
 		this.board = board;
@@ -46,81 +61,28 @@ public class PostSender implements IPostSender {
 		this.cookies = Board.Settings.isSetCookies() ? Board.Settings.cookies
 				: null;
 		client = new DefaultHttpClient();
-    	client.setRedirectStrategy(new LaxRedirectStrategy());
+		client.setRedirectStrategy(new LaxRedirectStrategy());
 	}
-	
+
 	/**
-	 * Создает отправщик и устанавливает его на создание треда.
-	 * @param board доска на которой создается тред.
-	 * @param post оригинальное сообщение.
-	 */
-	protected PostSender(String board, PostEntity post) {
-		this(board, null, post);	
-	}
-	
-	/*
 	 * @see com.nulchan.IPostSender#getCaptcha()
 	 */
 	@Override
 	public byte[] getCaptcha() throws BoardException {
 		try {
 			Connection.Response response = cookies == null ? Jsoup
-					.connect(Settings.baseUrl + "captcha.php?" + Math.random())
-					.userAgent(Settings.userAgent).referrer(Settings.baseUrl)
+					.connect(Settings.getFullUrl() + "captcha.php?" + Math.random())
+					.userAgent(Settings.userAgent).referrer(Settings.getFullUrl())
 					.ignoreContentType(true).execute() : Jsoup
-					.connect(Settings.baseUrl + "captcha.php?" + Math.random())
+					.connect(Settings.getFullUrl() + "captcha.php?" + Math.random())
 					.userAgent(Settings.userAgent).cookies(cookies)
-					.referrer(Settings.baseUrl).ignoreContentType(true)
+					.referrer(Settings.getFullUrl()).ignoreContentType(true)
 					.execute();
 			cookies = response.cookies();
 			return response.bodyAsBytes();
 		} catch (Exception e) {
 			throw new BoardException("Не могу загрузить капчу.");
 		}
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.nulchan.IPostSender#send(java.lang.String)
-	 */
-	@Override
-	public void send(String captcha) throws BoardException {
-
-		MultipartEntity entity = prepareEntity(captcha);
-		HttpPost request = preparePostRequest(entity);
-		// TODO Установить куки используя HttpContext?
-		String resultText = "";
-		try {
-			HttpResponse response = client.execute(request);
-			String html = EntityUtils.toString(response.getEntity());
-			Document doc = Jsoup.parse(html, request.getURI().toString());
-			resultText = doc.body().text();
-		} catch (Exception e) {
-			throw new BoardException("Сбой при отправке.");
-		}
-		if (resultText.contains("﻿Ошибка"))
-			;
-		throw new BoardException(resultText.substring(resultText
-				.indexOf("Ошибка") + 7));
-	}
-
-	private HttpPost preparePostRequest(MultipartEntity entity) {
-		// Генерируем запрос.
-		HttpPost request = new HttpPost(Settings.baseUrl + "board.php?dir="
-				+ board);
-		if (cookies != null && !cookies.isEmpty()) {
-			StringBuilder cookieStringBuilder = new StringBuilder();
-			for (String key : cookies.keySet())
-				cookieStringBuilder.append(key + "=" + cookies.get(key) + ";");
-			request.getParams().setParameter(ClientPNames.COOKIE_POLICY,
-					CookiePolicy.BROWSER_COMPATIBILITY);
-			request.setHeader("Cookie", cookieStringBuilder.toString());
-		}
-		request.setHeader("Referer", Settings.baseUrl + board);
-		request.setHeader("User-Agent", Settings.userAgent);
-		request.setEntity(entity);
-		return request;
 	}
 
 	private MultipartEntity prepareEntity(String captcha) throws BoardException {
@@ -154,6 +116,50 @@ public class PostSender implements IPostSender {
 		} catch (Exception e) {
 			throw new BoardException("Сбой при отправке.");
 		}
-	}	
+	}
+
+	private HttpPost preparePostRequest(MultipartEntity entity) {
+		// Генерируем запрос.
+		HttpPost request = new HttpPost(Settings.getFullUrl() + "board.php?dir="
+				+ board);
+		if (cookies != null && !cookies.isEmpty()) {
+			StringBuilder cookieStringBuilder = new StringBuilder();
+			for (String key : cookies.keySet())
+				cookieStringBuilder.append(key + "=" + cookies.get(key) + ";");
+			request.getParams().setParameter(ClientPNames.COOKIE_POLICY,
+					CookiePolicy.BROWSER_COMPATIBILITY);
+			request.setHeader("Cookie", cookieStringBuilder.toString());
+		}
+		request.setHeader("Referer", Settings.getFullUrl() + board);
+		request.setHeader("User-Agent", Settings.userAgent);
+		request.setEntity(entity);
+		return request;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.nulchan.IPostSender#send(java.lang.String)
+	 */
+	@Override
+	public void send(String captcha) throws BoardException {
+
+		MultipartEntity entity = prepareEntity(captcha);
+		HttpPost request = preparePostRequest(entity);
+		// TODO Установить куки используя HttpContext?
+		String resultText = "";
+		try {
+			HttpResponse response = client.execute(request);
+			String html = EntityUtils.toString(response.getEntity());
+			Document doc = Jsoup.parse(html, request.getURI().toString());
+			resultText = doc.body().text();
+		} catch (Exception e) {
+			throw new BoardException("Сбой при отправке.");
+		}
+		if (resultText.contains("﻿Ошибка"))
+			;
+		throw new BoardException(resultText.substring(resultText
+				.indexOf("Ошибка") + 7));
+	}
 
 }

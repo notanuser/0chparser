@@ -1,8 +1,7 @@
-private package com.nulchan;
+package com.nulchan;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,24 +12,25 @@ import com.nulchan.objects.ThreadEntity;
 import com.nulchan.parsers.IParser;
 import com.nulchan.parsers.ThreadParser;
 
-
 final class ThreadFetcher extends Fetcher<ThreadEntity> {
 
 	/**
 	 * 
-	 * @param path путь загрузки
+	 * @param path
+	 *            путь загрузки
 	 */
-	public ThreadFetcher(String path){
+	public ThreadFetcher(String path) {
 		super(path);
 	}
+
 	@Override
-	protected ThreadEntity[] parseHtmlDocument(Document html) 
+	protected ThreadEntity[] parseHtmlDocument(Document html)
 			throws ParseException {
 		List<ThreadEntity> posts = new ArrayList<ThreadEntity>();
-		Elements elements = html
-				.getElementsByAttributeValueStarting("id", "thread");
+		Elements elements = html.getElementsByAttributeValueStarting("id",
+				"thread");
 		IParser<ThreadEntity> parser = new ThreadParser();
-		for(Element e : elements) {
+		for (Element e : elements) {
 			posts.add(parser.parse(e));
 		}
 		return posts.toArray(new ThreadEntity[posts.size()]);

@@ -3,7 +3,6 @@ package com.nulchan;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -14,16 +13,17 @@ import com.nulchan.parsers.IParser;
 import com.nulchan.parsers.OPParser;
 import com.nulchan.parsers.PostParser;
 
-
-
 final class PostFetcher extends Fetcher<PostEntity> {
-	
+
 	/**
 	 * Инициализирует загрузчик для заданной доски и треда
-	 * @param boardUrl путь к доске (например, "http://0chan.hk/0/")
-	 * @param thread тред
+	 * 
+	 * @param boardUrl
+	 *            путь к доске (например, "http://0chan.hk/0/")
+	 * @param thread
+	 *            тред
 	 */
-	public PostFetcher(String boardUrl, ThreadEntity thread){
+	public PostFetcher(String boardUrl, ThreadEntity thread) {
 		super(boardUrl + "/res/" + thread.getId() + ".html");
 	}
 

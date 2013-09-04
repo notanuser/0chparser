@@ -85,13 +85,14 @@ public class Board {
 				Settings.cookies = response.cookies();
 			name = Jsoup.parse(response.body()).getElementsByTag("title")
 					.get(0).ownText();
-		} catch (IOException e) {
-			String msg = "Невозможно подключиться. (%s)";
-			if (e instanceof SocketTimeoutException)
-				msg = String.format(msg, e.getCause().getMessage());
-			else
-				msg = String.format(msg, e.getMessage());
-			throw new BoardException(msg);
+		} catch(SocketTimeoutException ste) {
+			Throwable cause = ste.getCause();
+			if(cause!=null && cause.getMessage()!=null)
+				throw new BoardException("Невозможно подключиться. (" + cause.getMessage() + ")");
+			else throw new BoardException("Невозможно подключиться. (" + ste.getMessage() + ")");
+		}	
+		catch (IOException e) {
+			throw new BoardException("Невозможно подключиться. (" + e.getMessage() + ")");
 		}
 	}
 

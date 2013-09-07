@@ -35,6 +35,7 @@ abstract class Parser<T extends PostEntity> implements IParser<T> {
 			if(!currentElements.isEmpty()) {
 				image = makeUrl(e.attr("href"));
 				thumb = makeUrl(currentElements.get(0).attr("src"));
+				break;
 			}
 		}
 		return new  String[]{thumb, image};

@@ -32,13 +32,14 @@ public final class PostParser extends Parser<PostEntity> {
 			String text = content.getElementsByClass("postmessage").get(0)
 					.text()
 					+ getVideo(content);
-			currentElements = currentElement.getElementsByTag("a");
+			/*currentElements = currentElement.getElementsByTag("a");
 			String image = currentElements.size() > 1 ? makeUrl(currentElements
 					.get(1).attr("href")) : "";
 			currentElements = currentElement.getElementsByTag("img");
 			String thumb = currentElements.isEmpty() ? ""
-					: makeUrl(currentElements.get(0).attr("src"));
-			return new PostEntity(id, image, thumb, name, isSaged, date, title,
+					: makeUrl(currentElements.get(0).attr("src"));*/
+			String attach[] = getAttachment(content);
+			return new PostEntity(id, attach[1], attach[0], name, isSaged, date, title,
 					trip, text);
 		} catch (Exception ex) {
 			throw new ParseException(this.getClass().getName());

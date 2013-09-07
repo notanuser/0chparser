@@ -34,15 +34,16 @@ public final class ThreadParser extends Parser<ThreadEntity> {
 			String text = currentElement.getElementsByTag("blockquote").get(0)
 					.text()
 					+ getVideo(element);
-			currentElements = currentElement.getElementsByTag("a");
+			/*currentElements = currentElement.getElementsByTag("a");
 			String image = currentElements.size() > 1 ? makeUrl(currentElements
 					.get(1).attr("href")) : "";
 			currentElements = currentElement.getElementsByTag("img");
 			String thumb = currentElements.isEmpty() ? ""
-					: makeUrl(currentElements.get(0).attr("src"));
+					: makeUrl(currentElements.get(0).attr("src"));*/
+			String attach[] = getAttachment(element);
 			currentElements = element.getElementsByClass("omittedposts");
-			int posts = 1;
-			int images = image.isEmpty() ? 0 : 1;
+			int posts = 0;
+			int images = 0;
 			if (!currentElements.isEmpty()) {
 				Pattern pattern = Pattern.compile("\\D+");
 				String matches[] = pattern.split(currentElements.get(0).text());
@@ -59,7 +60,7 @@ public final class ThreadParser extends Parser<ThreadEntity> {
 					images++;
 			}
 
-			return new ThreadEntity(id, image, thumb, name, isSaged, date,
+			return new ThreadEntity(id, attach[1], attach[0], name, isSaged, date,
 					title, trip, text, posts, images);
 		} catch (Exception ex) {
 			throw new ParseException(this.getClass().getName());

@@ -64,7 +64,8 @@ public class Board {
 	 *             Если не удалось подключиться.
 	 */
 	public Board(String board) throws BoardException {
-		
+		if(board == null || board.trim() == "")
+			throw new BoardException("Не задана доска.");
 		String split[] = board.split("/");
 		this.board = split[0];
 		if (split.length > 1) {
@@ -92,7 +93,8 @@ public class Board {
 			else throw new BoardException("Невозможно подключиться. (" + ste.getMessage() + ")");
 		}	
 		catch (IOException e) {
-			throw new BoardException("Невозможно подключиться. (" + e.getMessage() + ")");
+			String msg = e.getMessage() != null ? "(" + e.getMessage() + ")" : "";
+			throw new BoardException("Невозможно подключиться. " + msg);
 		}
 	}
 

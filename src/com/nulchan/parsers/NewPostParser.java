@@ -18,11 +18,17 @@ public final class NewPostParser extends Parser<PostEntity> {
 			Element currentElement;
 			String id = element.getElementsByTag("a").attr("name");
 			currentElements = element.getElementsByTag("a");
-			String image = currentElements.size() > 3 ? makeUrl(currentElements
-					.get(3).attr("href")) : "";
-			currentElements = element.getElementsByTag("img");
+			//String image = "", thumb = "";
+			//currentElements = element.getElementsByAttributeValue("target", "_blank");
+			String attachment[] = getAttachment(element);
+			/*for(Element e : currentElements)
+				if(e.children().hasClass("thumb")) {
+					image = makeUrl(e.attr("href"));
+					thumb = makeUrl(e.getElementsByClass("thumb").get(0).attr("src"));
+				}*/
+			/*currentElements = element.getElementsByTag("img");
 			String thumb = currentElements.isEmpty() ? ""
-					: makeUrl(currentElements.get(0).attr("src"));
+					: makeUrl(currentElements.get(0).attr("src"));*/
 			currentElement = element.getElementsByClass("postername").get(0);
 			String name = currentElement.text();
 			boolean isSaged = currentElement.html().contains("mailto:sage");
@@ -37,7 +43,7 @@ public final class NewPostParser extends Parser<PostEntity> {
 			String text = element.getElementsByClass("postmessage").get(0)
 					.text()
 					+ getVideo(element);
-			return new PostEntity(id, image, thumb, name, isSaged, date, title,
+			return new PostEntity(id, attachment[1], attachment[0], name, isSaged, date, title,
 					trip, text);
 		} catch (Exception e) {
 			throw new ParseException(this.getClass().getName());

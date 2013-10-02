@@ -58,7 +58,7 @@ public final class ThreadEntity extends PostEntity {
 
 	@Override
 	public String toString() {
-		return super.toString() + "\tEfgThread [id=" + id + ", images="
+		return super.toString() + "\tNulchThread [id=" + id + ", images="
 				+ images + ", posts=" + posts + "]";
 	}
 

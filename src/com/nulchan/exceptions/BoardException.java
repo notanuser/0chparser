@@ -17,7 +17,10 @@ public class BoardException extends Exception {
 	 *            сообщение об ошибке.
 	 */
 	public BoardException(String message) {
-		super("Ой, что-то не так: " + message);
+		super("Ой, что-то не так: " + message, null);
 	}
 
+	public BoardException(String message, Throwable cause) {
+		super( "Ой, что-то не так: " + message, cause);
+	}
 }

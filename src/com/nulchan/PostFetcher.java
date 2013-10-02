@@ -35,9 +35,8 @@ final class PostFetcher extends Fetcher<PostEntity> {
 		IParser<PostEntity> parser = new OPParser();
 		posts.add(parser.parse(containers.first()));
 		parser = new PostParser();
-		for (int i = 1; i < containers.size(); ++i) {
+		for (int i = 1; i < containers.size(); ++i)
 			posts.add(parser.parse(containers.get(i)));
-		}
 		return posts.toArray(new PostEntity[posts.size()]);
 	}
 }

@@ -41,7 +41,7 @@ public abstract class Fetcher<T extends PostEntity> implements IFetcher<T> {
 			return Jsoup.parse(response.body(), uri);
 		} catch (Exception e) {
 			// e.printStackTrace();
-			throw new BoardException(e.getMessage());
+			throw new BoardException(e.getMessage(), e);
 		}
 	}
 

@@ -63,7 +63,7 @@ public final class ThreadParser extends Parser<ThreadEntity> {
 			return new ThreadEntity(id, attach[1], attach[0], name, isSaged, date,
 					title, trip, text, posts, images);
 		} catch (Exception ex) {
-			throw new ParseException(this.getClass().getName());
+			throw new ParseException(this.getClass().getName(), ex);
 		}
 	}
 }

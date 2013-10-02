@@ -56,9 +56,9 @@ public class PostSender implements IPostSender {
 	 */
 	protected PostSender(String board, ThreadEntity thread, PostEntity post) {
 		this.board = board;
-		this.threadId = thread == null ? "0" : thread.getId();
+		threadId = thread == null ? "0" : thread.getId();
 		this.post = post;
-		this.cookies = Board.Settings.isSetCookies() ? Board.Settings.cookies
+		cookies = Board.Settings.isSetCookies() ? Board.Settings.cookies
 				: null;
 		client = new DefaultHttpClient();
 		client.setRedirectStrategy(new LaxRedirectStrategy());
@@ -78,10 +78,10 @@ public class PostSender implements IPostSender {
 					.userAgent(Settings.userAgent).cookies(cookies)
 					.referrer(Settings.getFullUrl()).ignoreContentType(true)
 					.execute();
-			cookies = response.cookies();
-			return response.bodyAsBytes();
+					cookies = response.cookies();
+					return response.bodyAsBytes();
 		} catch (Exception e) {
-			throw new BoardException("Не могу загрузить капчу.");
+			throw new BoardException("Не могу загрузить капчу.", e);
 		}
 	}
 
@@ -105,16 +105,16 @@ public class PostSender implements IPostSender {
 			entity.addPart("message", new StringBody(post.getText(), charset));
 			tmp = post.getAttachment();
 			File f;
-			if (tmp != null && (f = new File(tmp)).isFile()) {
+			if (tmp != null && (f = new File(tmp)).isFile())
 				entity.addPart("imagefile", new FileBody(f));
-			} else
+			else
 				entity.addPart("nofile", new StringBody("on", charset));
 			entity.addPart("postpassword", new StringBody(Settings.password,
 					charset));
 			// TODO добавить возможность вставки видео?
 			return entity;
 		} catch (Exception e) {
-			throw new BoardException("Сбой при отправке.");
+			throw new BoardException("Сбой при отправке.", e);
 		}
 	}
 
@@ -154,12 +154,11 @@ public class PostSender implements IPostSender {
 			Document doc = Jsoup.parse(html, request.getURI().toString());
 			resultText = doc.body().text();
 		} catch (Exception e) {
-			throw new BoardException("Сбой при отправке.");
+			throw new BoardException("Сбой при отправке.", e);
 		}
 		if (resultText.contains("﻿Ошибка"))
-			;
-		throw new BoardException(resultText.substring(resultText
-				.indexOf("Ошибка") + 7));
+			throw new BoardException(resultText.substring(resultText
+					.indexOf("Ошибка") + 7));
 	}
 
 }

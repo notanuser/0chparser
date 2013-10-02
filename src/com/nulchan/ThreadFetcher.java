@@ -30,9 +30,8 @@ final class ThreadFetcher extends Fetcher<ThreadEntity> {
 		Elements elements = html.getElementsByAttributeValueStarting("id",
 				"thread");
 		IParser<ThreadEntity> parser = new ThreadParser();
-		for (Element e : elements) {
+		for (Element e : elements)
 			posts.add(parser.parse(e));
-		}
 		return posts.toArray(new ThreadEntity[posts.size()]);
 	}
 }

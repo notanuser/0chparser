@@ -12,8 +12,11 @@ public class ParseException extends Exception {
 	}
 
 	public ParseException(String where) {
-		super(
-				"Если вы это видите, значит  парсер обрабатывает что-то не то. Попробуйте что-нибудь другое.\n Ошибка "
-						+ where);
+		this("Если вы это видите, значит  парсер обрабатывает что-то не то. Попробуйте что-нибудь другое.\n Ошибка "
+				+ where, null);
+	}
+
+	public ParseException(String message, Throwable cause) {
+		super("Если вы это видите, значит  парсер обрабатывает что-то не то. Попробуйте что-нибудь другое.\n" + message, cause);
 	}
 }

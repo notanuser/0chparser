@@ -1,5 +1,6 @@
 package com.nulchan.objects;
 
+
 /**
  * Просто контейнер.
  */
@@ -63,7 +64,7 @@ public class PostEntity {
 		this.thumbnail = thumbnail;
 		this.date = date;
 		this.trip = trip;
-		this.sage = saged;
+		sage = saged;
 	}
 
 	/**

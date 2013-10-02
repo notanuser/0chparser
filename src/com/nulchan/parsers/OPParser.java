@@ -41,7 +41,7 @@ public final class OPParser extends Parser<PostEntity> {
 			return new PostEntity(id, attach[1], attach[0], name, isSaged, date, title,
 					trip, text);
 		} catch (Exception ex) {
-			throw new ParseException(this.getClass().getName());
+			throw new ParseException(this.getClass().getName(), ex);
 		}
 	}
 

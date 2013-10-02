@@ -46,7 +46,7 @@ public final class NewPostParser extends Parser<PostEntity> {
 			return new PostEntity(id, attachment[1], attachment[0], name, isSaged, date, title,
 					trip, text);
 		} catch (Exception e) {
-			throw new ParseException(this.getClass().getName());
+			throw new ParseException(this.getClass().getName(), e);
 		}
 	}
 

@@ -17,9 +17,9 @@ public class Board {
 		 * Список досок.
 		 */
 		public final static String[] boards = { "a", "b", "d", "r", "0", "e",
-				"t", "hw", "s", "c", "vg", "8", "bg", "wh", "au", "bo", "co",
-				"cook", "f", "fa", "fl", "m", "med", "ph", "tv", "wp", "war",
-				"h", "g", "fur" };
+			"t", "hw", "s", "c", "vg", "8", "bg", "wh", "au", "bo", "co",
+			"cook", "f", "fa", "fl", "m", "med", "ph", "tv", "wp", "war",
+			"h", "g", "fur" };
 
 		protected static Map<String, String> cookies;
 		/**
@@ -28,11 +28,18 @@ public class Board {
 		public static String password = "";
 
 		public final static String protocol = "http://";
-		
+
 		protected final static String domain = "0chan.hk";
 
 		protected final static String userAgent = "Mozilla";
 
+		/**
+		 * Возвращает адрес сайта, комбинируя поля protocol и domain.
+		 * @return
+		 */
+		protected final static String getFullUrl() {
+			return protocol + domain + "/";
+		}
 		/**
 		 * Проверяет, установлены ли куки.
 		 * 
@@ -41,13 +48,6 @@ public class Board {
 		 */
 		protected static boolean isSetCookies() {
 			return cookies != null && !cookies.isEmpty();
-		}
-		/**
-		 * Возвращает адрес сайта, комбинируя поля protocol и domain.
-		 * @return
-		 */
-		protected final static String getFullUrl() {
-			return protocol + domain + "/";
 		}
 
 	}
@@ -68,14 +68,14 @@ public class Board {
 			throw new BoardException("Не задана доска.");
 		String split[] = board.split("/");
 		this.board = split[0];
-		if (split.length > 1) {
+		if (split.length > 1)
 			try {
 				setPage(Integer.parseInt(split[1]));
 			} catch (Exception e) {
 			}
-		} else
+		else
 			page = 0;
-		this.url = Settings.getFullUrl() + this.board;
+		url = Settings.getFullUrl() + this.board;
 		try {
 			Response response = Jsoup.connect(url)
 					.userAgent(Settings.userAgent).referrer(Settings.getFullUrl())
@@ -89,12 +89,14 @@ public class Board {
 		} catch(SocketTimeoutException ste) {
 			Throwable cause = ste.getCause();
 			if(cause!=null && cause.getMessage()!=null)
-				throw new BoardException("Невозможно подключиться. (" + cause.getMessage() + ")");
-			else throw new BoardException("Невозможно подключиться. (" + ste.getMessage() + ")");
-		}	
+				throw new BoardException("Невозможно подключиться. (" + cause.getMessage() + ")", cause);
+			else if(ste.getMessage()!=null)
+				throw new BoardException("Невозможно подключиться. (" + ste.getMessage() + ")", cause);
+			else throw new BoardException("Невозможно подключиться.");
+		}
 		catch (IOException e) {
 			String msg = e.getMessage() != null ? "(" + e.getMessage() + ")" : "";
-			throw new BoardException("Невозможно подключиться. " + msg);
+			throw new BoardException("Невозможно подключиться. " + msg, e);
 		}
 	}
 
@@ -137,7 +139,7 @@ public class Board {
 	public String getName() {
 		return name == null ? "" : name;
 	}
-	
+
 	/**
 	 * Создает отправщик сообщений.
 	 * 
